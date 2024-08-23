@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use App\Http\Requests\SavePostRequest;
 
 class PostController extends Controller
 {
@@ -22,28 +23,32 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('posts.create');
+        return view('posts.create', ['post' => new Post]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(SavePostRequest $request)
     {
-        $request->validate([
+        /*$validated = $request->validate([
             'title' => ['required', 'min:4'],
             'body' => ['required']
-        ]);
+        ]);*/
 
-        $post = new Post;
+        /*$post = new Post;
         $post->title = $request->input('title');
         $post->body = $request->input('body');
-        $post->save();
+        $post->save();*/
+
+        Post::create($request->validated());
 
         //session()->flash('status', 'Post created!');
 
-        return to_route('posts.index')
-            ->with('status', 'Post created!');
+        //return to_route('posts.index')
+        //  ->with('status', 'Post created!');
+
+        return to_route('posts.index')->with('status', 'Post created!');
     }
 
     /**
@@ -65,19 +70,25 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(SavePostRequest $request, Post $post)
     {
-        $request->validate([
+        /*$validated = $request->validate([
             'title' => ['required', 'min:4'],
             'body' => ['required']
-        ]);
+        ]);*/
 
-        $post->title = $request->input('title');
+        /*$post->title = $request->input('title');
         $post->body = $request->input('body');
-        $post->save();
+        $post->save();*/
 
-        return to_route('posts.index')
-            ->with('status', 'Post Edited!');
+        $post->update($request->validated());
+
+        //session()->flash('status', 'Post updated');
+
+        return to_route('posts.show', $post)->with('status', 'Post updated!');
+
+        //return to_route('posts.index')
+        //  ->with('status', 'Post Edited!');
     }
 
     /**
@@ -88,6 +99,6 @@ class PostController extends Controller
         $post->delete();
 
         return to_route('posts.index')
-            ->with('status', 'Product deleted successfully');
+            ->with('status', 'Post deleted successfully');
     }
 }
