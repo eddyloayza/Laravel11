@@ -22,8 +22,6 @@ Route::view('/about', 'about')->name('about');
 //Route::patch('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
 //Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
 
-// CRUD COMPLETO 2
-
 Route::resource('blog', PostController::class, [
     'names' => 'posts',
     'parameters' => [
